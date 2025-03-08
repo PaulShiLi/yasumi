@@ -9,7 +9,16 @@ permissions:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['windows-latest']
+    
+    env:
+      SPEC_FILE: 'yasumi.spec'
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -17,18 +26,48 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: 3.11.x
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
-          python -m pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Package Application with PyInstaller
+        working-directory: ./
+      
+      - name: Install PyInstaller
         run: |
-          python -m pyinstaller yasumi.spec
+          pip install pyinstaller
+        working-directory: ./
+
+      - name: Build executable
+        run: |
+          pyinstaller ${{ env.SPEC_FILE }}
+      
+      - name: Create Artifact (Windows)
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-executables
+          path: dist/
+
+      - name: Create Artifact (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-executables
+          path: dist/
+
+      - name: Create Artifact (macOS)
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos-executables
+          path: dist/
+
+      - name: List files in dist folder
+        run: ls -R ./dist/
 
       - name: Upload Release Asset
+        if: matrix.os == 'windows-latest'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
