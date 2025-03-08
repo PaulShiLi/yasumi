@@ -1,15 +1,8 @@
 name: Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      create_release:
-        description: 'Create new release'
-        required: true
-        type: boolean
-  push:
-    branches:
-      - main
+  release:
+    types: [published]
 
 permissions:
   contents: write
@@ -33,64 +26,14 @@ jobs:
 
       - name: Package Application with PyInstaller
         run: |
-          pyinstaller yasumi.spec
+          python -m pyinstaller yasumi.spec
 
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Windows-exe
-          path: dist/yasumi.exe
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: Windows-exe
-          path: ./artifact
-
-      - name: Determine tag name
-        id: tag
-        shell: bash
-        run: |
-          BUILD_NUMBER=$(git rev-list --count HEAD)
-          SHORT_HASH=$(git rev-parse --short=7 HEAD)
-          if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
-            echo "name=b${BUILD_NUMBER}" >> $GITHUB_OUTPUT
-          else
-            SAFE_NAME=$(echo "${GITHUB_REF_NAME}" | tr '/' '-')
-            echo "name=${SAFE_NAME}-b${BUILD_NUMBER}-${SHORT_HASH}" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Create GitHub Release
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.tag.outputs.name }}
-          name: Release ${{ steps.tag.outputs.name }}
-          body: Automated release for ${{ steps.tag.outputs.name }}
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Release Assets
-        uses: actions/github-script@v6
         with:
-          script: |
-            const fs = require('fs');
-            const path = require('path');
-            const artifactDir = './artifact';
-            const files = fs.readdirSync(artifactDir);
-            for (const file of files) {
-              console.log('Uploading asset:', file);
-              await github.repos.uploadReleaseAsset({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                release_id: parseInt('${{ steps.create_release.outputs.id }}'),
-                name: file,
-                data: fs.readFileSync(path.join(artifactDir, file))
-              });
-            }
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: dist/yasumi.exe
+          asset_name: yasumi.exe
+          asset_content_type: application/vnd.microsoft.portable-executable
