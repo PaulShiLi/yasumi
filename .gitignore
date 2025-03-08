@@ -1,5 +1,5 @@
 build/
 dist/
-.config/
-*/__pycache__/
+.config
+__pycache__/
 detect-img/
