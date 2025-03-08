@@ -1,22 +1,25 @@
 # Yasumi
 
-**Yasumi** is a cross-platform automation tool designed for AFK (Away From Keyboard) tasks. It leverages image/template matching techniques along with macro recording and playback functionalities. The tool is modularly organized and supports both Windows and macOS environments.
+> **⚠️ WARNING:** macOS support is **untested**! Use at your own risk 🚫  
+> *(macOS users, please note that while basic functionality may work, full testing has only been performed on Windows.)*
+
+**Yasumi** is a cross-platform automation tool designed for AFK (Away From Keyboard) tasks. It leverages image/template matching techniques along with macro recording and playback functionalities. The tool is modularly organized and currently supports the Windows environment.
 
 ## Features
 
-- **Image Matching:**  
-  Uses several methods (e.g., PyAutoGUI, grayscale template matching, and optionally ORB/SIFT/AKAZE) to locate images on-screen and simulate clicks.
+- **🖼️ Image Matching:**  
+  Uses several methods (e.g., PyAutoGUI, grayscale template matching, and ORB/SIFT/AKAZE algorithms) to locate images on-screen and simulate clicks.
 
-- **Macro Recording & Playback:**  
+- **🎬 Macro Recording & Playback:**  
   Record keyboard and mouse inputs and replay them automatically. Macro playback is implemented using **pydirectinput** on Windows and **pyautogui** on macOS.
 
-- **Configurable Settings:**  
+- **⚙️ Configurable Settings:**  
   Easily adjust matching thresholds, scanning intervals, and stop keys via a configuration file (`.config`).
 
-- **Profile Management:**  
+- **👤 Profile Management:**  
   Create, import, and manage multiple profiles. Each profile can have its own set of images to detect as well as dedicated macro recordings.
 
-- **Curses-based Menu:**  
+- **💻 Curses-based Menu:**  
   A text-based interface allows you to select matching algorithms and configure settings.
 
 ## Folder Structure
@@ -43,7 +46,7 @@ Yasumi/
 
 ## Installation
 
-1. **Clone the Repository**
+1. **Clone the Repository** 📥
 
    ```bash
    git clone https://github.com/yourusername/yasumi.git
@@ -60,16 +63,16 @@ Yasumi/
 
    _Note:_  
    - On Windows, you may need to install `windows-curses` for the curses module.  
-   - On macOS, ensure your terminal or packaged app has Accessibility permissions for automation.
+   - On macOS, ensure your terminal (or packaged app) has Accessibility permissions for automation.
 
 ## Usage
 
-1. **Run the Tool**
+1. **Run the Tool** 🚀
 
    From the project root, run:
 
    ```bash
-   python src/yasumi.py
+   python -m src/yasumi.py
    ```
 
 2. **Main Menu Options**
@@ -92,7 +95,7 @@ Yasumi/
 ## Macro Recording & Playback
 
 - **Recording:**  
-  In the Edit Profile menu under “Modify Key Macro”, you can start/stop macro recording using F8 (to toggle recording) and F9 (to exit macro recording mode).
+  In the Edit Profile menu under “Modify Key Macro”, you can start/stop macro recording using F8 (to toggle recording on/off).
 
 - **Playback:**  
   Macro playback runs continuously in the background when starting with the default profile.  
@@ -116,7 +119,7 @@ This will produce an executable in the **dist** folder.
 
 ## Contributing
 
-Contributions and feedback are welcome! Feel free to open issues or submit pull requests to help improve the project.
+Contributions and feedback are welcome! Feel free to open issues or submit pull requests to help improve the project. 💡
 
 ## License
 
