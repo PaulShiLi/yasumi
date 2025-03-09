@@ -72,7 +72,7 @@ Yasumi/
    From the project root, run:
 
    ```bash
-   python -m src/yasumi.py
+   python -m src.yasumi.py
    ```
 
 2. **Main Menu Options**
@@ -112,7 +112,7 @@ Yasumi/
 To create a standalone executable, you can use PyInstaller. For example, create a `.spec` file that includes your **src** folder and run:
 
 ```bash
-pyinstaller --onefile --paths src src/yasumi.py
+pyinstaller yasumi.spec
 ```
 
 This will produce an executable in the **dist** folder.
